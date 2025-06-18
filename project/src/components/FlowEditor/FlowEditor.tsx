@@ -181,8 +181,17 @@ const FlowEditor: React.FC = () => {
 
   /**
    * Crea el primer nodo en el centro
-   */
+   
   const createFirstNode = useCallback(() => {
+    createNode({ x: 250, y: 100 });
+  }, [createNode]);
+
+  const createFirstNode = useCallback(() => {
+    // Usa coordenadas más centrales y ajusta según el tamaño de tu contenedor
+    createNode({ x: window.innerWidth / 2 - 100, y: window.innerHeight / 2 - 50 });
+  }, [createNode]);*/
+  const createFirstNode = useCallback(() => {
+    console.log("Creando primer nodo...");
     createNode({ x: 250, y: 100 });
   }, [createNode]);
 
