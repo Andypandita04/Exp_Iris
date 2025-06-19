@@ -15,8 +15,12 @@ import 'reactflow/dist/style.css';
 
 import TestingCardNode from './TestingCardNode';
 import LearningCardNode from './LearningCardNode';
+import LearningCardEditModal from './LearningCardEditModal';
+
+import TestingCardEditModal from './TestingCardEditModal';
+
 import { TestingCardData, LearningCardData, NodeData } from './types';
-import './FlowEditor.css';
+import './styles/FlowEditor.css';
 
 const nodeTypes = {
   testing: TestingCardNode,
@@ -200,12 +204,38 @@ const FlowEditor: React.FC = () => {
         )}
       </ReactFlowProvider>
 
-      {/* Modal de edición */}
       {isModalOpen && editingNode && (
-        <div className="modal">
-          {/* Implementa tu modal de edición aquí */}
-          <button onClick={() => setIsModalOpen(false)}>Cerrar</button>
-        </div>
+        editingNode.type === 'testing' ? (
+          <TestingCardEditModal
+            node={editingNode as Node<TestingCardData>}
+            onSave={(updatedData) => {
+              setNodes((nds) =>
+                nds.map((node) =>
+                  node.id === editingNode.id
+                    ? { ...node, data: { ...node.data, ...updatedData } }
+                    : node
+                )
+              );
+              setIsModalOpen(false);
+            }}
+            onClose={() => setIsModalOpen(false)}
+          />
+        ) : (
+          <LearningCardEditModal
+            node={editingNode as Node<LearningCardData>}
+            onSave={(updatedData) => {
+              setNodes((nds) =>
+                nds.map((node) =>
+                  node.id === editingNode.id
+                    ? { ...node, data: { ...node.data, ...updatedData } }
+                    : node
+                )
+              );
+              setIsModalOpen(false);
+            }}
+            onClose={() => setIsModalOpen(false)}
+          />
+        )
       )}
     </div>
   );

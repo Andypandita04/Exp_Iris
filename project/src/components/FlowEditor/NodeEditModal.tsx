@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Save, Calendar, FileText, Tag } from 'lucide-react';
 import { Node } from 'reactflow';
 import { NodeData } from './types';
-import './NodeEditModal.css';
+import './styles/NodeEditModal.css';
 
 /**
  * Props para el componente NodeEditModal

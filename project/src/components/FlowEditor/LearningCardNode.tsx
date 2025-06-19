@@ -2,7 +2,7 @@ import React from 'react';
 import { Handle, Position } from 'reactflow';
 import { Edit3, Trash2, BookOpen } from 'lucide-react';
 import { LearningCardData } from './types';
-import './LearningCardNode.css';
+import './styles/LearningCardNode.css';
 
 /**
  * Props para el componente LearningCardNode

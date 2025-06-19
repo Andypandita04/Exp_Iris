@@ -2,7 +2,7 @@ import React from 'react';
 import { Handle, Position } from 'reactflow';
 import { Edit3, Trash2, Plus, FileText, ClipboardList } from 'lucide-react';
 import { TestingCardData } from './types';
-import './TestingCardNode.css';
+import './styles/TestingCardNode.css';
 
 /**
  * Props para el componente TestingCardNode
