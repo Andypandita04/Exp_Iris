@@ -13,16 +13,18 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 
-import CustomNode from './CustomNode';
+//import CustomNode from './CustomNode';
 import NodeEditModal from './NodeEditModal';
 import { NodeData } from './types';
 import './FlowEditor.css';
+import TestingCardNode from './TestingCardNode';
+import LearningCardNode from './LearningCardNode';
 
 // Tipos de nodos personalizados
 const nodeTypes = {
-  customNode: CustomNode,
+  testing: TestingCardNode,
+  learning: LearningCardNode,
 };
-
 /**
  * Componente principal del editor de flujo
  * Maneja la lógica principal de React Flow y las operaciones CRUD de nodos
@@ -50,29 +52,61 @@ const FlowEditor: React.FC = () => {
   /**
    * Crea un nuevo nodo en una posición específica
    */
-  const createNode = useCallback((position: { x: number; y: number }) => {
+  // Modifica la función createNode:
+  const createNode = useCallback((position: { x: number; y: number }, type: 'testing' | 'learning' = 'testing') => {
     const newNodeId = `node-${nodeIdCounter.current++}`;
     
-    const newNode: Node<NodeData> = {
-      id: newNodeId,
-      type: 'customNode',
-      position,
-      data: {
-        nombre: `Nodo ${nodeIdCounter.current - 1}`,
-        descripcion: 'Descripción del nuevo nodo',
-        fecha: new Date().toISOString().split('T')[0],
-        onEdit: () => {},
-        onDelete: () => {},
-        onAddChild: () => {},
-      },
-    };
-
-    setNodes((nds) => [...nds, newNode]);
+    if (type === 'testing') {
+      const newNode: Node<TestingCardData> = {
+        id: newNodeId,
+        type: 'testing',
+        position,
+        data: {
+          id: newNodeId,
+          type: 'testing',
+          title: `Testing Card ${nodeIdCounter.current - 1}`,
+          hypothesis: '',
+          experimentType: 'Entrevista',
+          description: 'Descripción del experimento',
+          metrics: [],
+          criteria: [],
+          startDate: new Date().toISOString().split('T')[0],
+          endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+          attachments: [],
+          responsible: '',
+          experimentCategory: 'Descubrimiento',
+          status: 'En desarrollo',
+          onAddTesting: () => {},
+          onAddLearning: () => {},
+          onEdit: () => {},
+          onDelete: () => {},
+        },
+      };
+      setNodes((nds) => [...nds, newNode]);
+    } else {
+      const newNode: Node<LearningCardData> = {
+        id: newNodeId,
+        type: 'learning',
+        position,
+        data: {
+          id: newNodeId,
+          type: 'learning',
+          testingCardId: '',
+          result: '',
+          actionableInsight: '',
+          links: [],
+          attachments: [],
+          onEdit: () => {},
+          onDelete: () => {},
+        },
+      };
+      setNodes((nds) => [...nds, newNode]);
+    }
   }, [setNodes]);
 
   /**
    * Crea un nuevo nodo hijo conectado al nodo padre
-   */
+   
   const createChildNode = useCallback((parentId: string) => {
     const parentNode = nodes.find(node => node.id === parentId);
     if (!parentNode) return;
@@ -111,7 +145,58 @@ const FlowEditor: React.FC = () => {
     // Actualizar estados
     setNodes((nds) => [...nds, newNode]);
     setEdges((eds) => [...eds, newEdge]);
+  }, [nodes, setNodes, setEdges]);*/
+
+  const createChildNode = useCallback((parentId: string, childType: 'testing' | 'learning') => {
+    const parentNode = nodes.find(node => node.id === parentId);
+    if (!parentNode) return;
+
+    const newNodeId = `node-${nodeIdCounter.current++}`;
+    const newPosition = {
+      x: parentNode.position.x + (childType === 'learning' ? 300 : 0),
+      y: parentNode.position.y + (childType === 'learning' ? 0 : 150),
+    };
+
+    if (childType === 'testing') {
+      const newNode: Node<TestingCardData> = {
+        id: newNodeId,
+        type: 'testing',
+        position: newPosition,
+        data: {
+          ...defaultTestingCardData, // Define esto con valores por defecto
+          id: newNodeId,
+          onAddTesting: () => createChildNode(newNodeId, 'testing'),
+          onAddLearning: () => createChildNode(newNodeId, 'learning'),
+          onEdit: () => openEditModal(newNodeId),
+          onDelete: () => deleteNode(newNodeId),
+        },
+      };
+      setNodes((nds) => [...nds, newNode]);
+    } else {
+      const newNode: Node<LearningCardData> = {
+        id: newNodeId,
+        type: 'learning',
+        position: newPosition,
+        data: {
+          ...defaultLearningCardData, // Define esto con valores por defecto
+          id: newNodeId,
+          testingCardId: parentId,
+          onEdit: () => openEditModal(newNodeId),
+          onDelete: () => deleteNode(newNodeId),
+        },
+      };
+      setNodes((nds) => [...nds, newNode]);
+    }
+
+    const newEdge: Edge = {
+      id: `edge-${parentId}-${newNodeId}`,
+      source: parentId,
+      target: newNodeId,
+    };
+
+    setEdges((eds) => [...eds, newEdge]);
   }, [nodes, setNodes, setEdges]);
+
 
   /**
    * Elimina un nodo y todas sus conexiones
