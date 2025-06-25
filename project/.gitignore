@@ -1,0 +1,20 @@
+# Dependencias
+node_modules/
+.pnpm-store/
+.yarn/
+
+# Builds y distribución
+dist/
+build/
+.next/
+out/
+
+# Variables de entorno
+.env
+.env.local
+
+# Archivos de desarrollo
+.DS_Store
+*.log
+.vscode/
+.idea/

@@ -3,27 +3,71 @@
  */
 
 /**
- * Estructura de datos para un nodo en el flujo
+ * Tipos de experimento
  */
-export interface NodeData {
-  /** Nombre del nodo */
-  nombre: string;
-  
-  /** Descripción del nodo */
-  descripcion: string;
-  
-  /** Fecha asociada al nodo (formato YYYY-MM-DD) */
-  fecha: string;
-  
-  /** Función para editar el nodo */
-  onEdit: () => void;
-  
-  /** Función para eliminar el nodo */
-  onDelete: () => void;
-  
-  /** Función para agregar un nodo hijo */
-  onAddChild: () => void;
+export type ExperimentType = 'Entrevista' | 'Prototipo' | 'Encuesta' | 'A/B Test';
+export type ExperimentCategory = 'Descubrimiento' | 'Validación';
+export type ExperimentStatus = 'En desarrollo' | 'En validación' | 'En ejecución' | 'Cancelado' | 'Terminado';
+
+/**
+ * Estructura de datos para una Testing Card
+ */
+export interface TestingCardData {
+    id: string;
+      type: 'testing';
+        title: string;
+          hypothesis: string;
+            experimentType: ExperimentType;
+              description: string;
+                metrics: {
+                    metric: string;
+                        unit: string;
+                            value: number;
+                              }[];
 }
+  criteria: {
+    metric: string;
+    operator: '=' | '>' | '<';
+    value: number;
+  }[];
+  startDate: string;
+  endDate: string;
+  attachments: {
+    fileUrl: string;
+    fileName: string;
+  }[];
+  responsible: string;
+  experimentCategory: ExperimentCategory;
+  status: ExperimentStatus;
+  onAddTesting: () => void;
+  onAddLearning: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
+}
+
+/**
+ * Estructura de datos para una Learning Card
+ */
+export interface LearningCardData {
+  id: string;
+  type: 'learning';
+  testingCardId: string;
+  result: string;
+  actionableInsight: string;
+  links: string[];
+  attachments: {
+    fileUrl: string;
+    fileName: string;
+  }[];
+  onEdit: () => void;
+  onDelete: () => void;
+}
+
+/**
+ * Tipo unificado para los datos de nodo
+ */
+export type NodeData = TestingCardData | LearningCardData;
+
 
 /**
  * Datos para la creación de un nuevo nodo

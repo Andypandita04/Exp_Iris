@@ -2,7 +2,7 @@ import React from 'react';
 import { Handle, Position } from 'reactflow';
 import { Edit3, Trash2, Plus } from 'lucide-react';
 import { NodeData } from './types';
-import './CustomNode.css';
+import './styles/CustomNode.css';
 
 /**
  * Props para el componente CustomNode
