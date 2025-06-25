@@ -13,17 +13,18 @@ export type ExperimentStatus = 'En desarrollo' | 'En validaciÃ³n' | 'En ejecuciÃ
  * Estructura de datos para una Testing Card
  */
 export interface TestingCardData {
-  id: string;
-  type: 'testing';
-  title: string;
-  hypothesis: string;
-  experimentType: ExperimentType;
-  description: string;
-  metrics: {
-    metric: string;
-    unit: string;
-    value: number;
-  }[];
+    id: string;
+      type: 'testing';
+        title: string;
+          hypothesis: string;
+            experimentType: ExperimentType;
+              description: string;
+                metrics: {
+                    metric: string;
+                        unit: string;
+                            value: number;
+                              }[];
+}
   criteria: {
     metric: string;
     operator: '=' | '>' | '<';
